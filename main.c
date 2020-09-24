@@ -96,16 +96,14 @@ juego * obtenerJuegos(int *largo) {
 int main() {
     int largo;
     juego *juegos = obtenerJuegos(&largo);
-    /*
+    
     for (int i = 0; i < largo; i++) {
         printf("%s\n", juegos[i].nombre);
-        for (int j = 0; j < juegos[i].cantidadCategorias; j++)
-            printf("%s, ", juegos[i].categorias[j]);
-        printf("\n");
+        printf("%s\n", juegos[i].categoria);
+        printf("%d\n", juegos[i].cantidadCategorias);
         printf("%s\n", juegos[i].autor);
         printf("%s\n", juegos[i].resumen);
     }
-    */
-
+    
     return 0;
 }
