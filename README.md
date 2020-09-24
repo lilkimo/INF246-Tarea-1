@@ -3,8 +3,10 @@ Camilo Gonzalez, 201873550-7
 
 Zarko Kuljis, 201823523-7
 # Consideraciones
-Asumimos que, de acuerdo a la semántica de la palabra 'categoría', es imposible que se de el caso en que una categoría sólo se manifieste en un juego.
-
 El nombre del archivo y el nombre del juego deben ser el mismo.
 
-También consideramos que la descripción de un juego se escribe en una sóla línea con un máximo de 255 caracteres.
+Cada línea de los archivos debe tener 255 carácteres o menos.
+
+Cada parámetro de los juegos (Nombre, Categorías, Empresa Autora y Resumen) debe ocupar exactamente una línea.
+
+Asumimos que, de acuerdo a la semántica de la palabra 'categoría', es imposible que se de el caso en que una categoría sólo se manifieste en un juego. Es decir, cada categoría estará presente en al menos dos juegos.
