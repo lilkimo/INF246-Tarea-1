@@ -1,6 +1,8 @@
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+*/
 
 char * strip(char *string) {
     char caracteresInvalidos[2] = {' ', '\n'};
