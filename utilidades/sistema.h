@@ -26,5 +26,7 @@ void copiar_archivo(char *destino, char *origen) {
       fputc(ch, target);
    fclose(source);
    fclose(target);
+   //remove(origen); elimina el archivo de origen, dejar comentado hasta probar todo
+
    return;
 }
