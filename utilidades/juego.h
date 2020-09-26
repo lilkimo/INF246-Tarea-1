@@ -34,7 +34,9 @@ juego obtenerJuego(char *direccion) {
         exit(1);             
     }
 
-    char *ptr = strtok(direccion, "/");
+    char copiaDireccion[255];
+    strcpy(copiaDireccion, direccion);
+    char *ptr = strtok(copiaDireccion, "/");
     while (ptr != NULL) {
         strcpy(juego.archivo, ptr);
         ptr = strtok(NULL, "/");

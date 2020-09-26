@@ -48,7 +48,6 @@ int criterioOrdenamiento(const void *juego1, const void *juego2) {
 }
 
 int main() {
-    
     char dirBibloteca[] = "./juegos/";
     char dirCategorias[] = "./categorias/";
     
@@ -92,6 +91,6 @@ int main() {
         printf("%s\n", juegos[i].nombre);
     }
     */
-    //free(juegos);
+    free(juegos);
     return 0;
 }
