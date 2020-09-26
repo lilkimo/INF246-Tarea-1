@@ -103,8 +103,9 @@ void copiar_archivo(char *destino, char *origen, int borrar) {
     if (ruta[strlen(ruta) - 1] != '/')
         strcat(ruta, "/");
     
-    char nombre[255];
-    char *ptr = strtok(origen, "/");
+    char nombre[255], copiaOrigen[255];
+    strcpy(copiaOrigen, origen);
+    char *ptr = strtok(copiaOrigen, "/");
     while (ptr != NULL) {
         strcpy(nombre, ptr);
         ptr = strtok(NULL, "/");
