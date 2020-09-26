@@ -13,6 +13,8 @@
 #define JUEGOSBUFFER 255
 
 typedef struct {
+    char archivo[STRINGBUFFER];
+    
     char nombre[STRINGBUFFER];
     char autor[STRINGBUFFER];
     char resumen[STRINGBUFFER];
@@ -32,13 +34,18 @@ juego obtenerJuego(char *direccion) {
         exit(1);             
     }
 
+    char *ptr = strtok(direccion, "/");
+    while (ptr != NULL) {
+        strcpy(juego.archivo, ptr);
+        ptr = strtok(NULL, "/");
+    }
+
     fgets(linea, 255, fp);
-    linea[strcspn(linea, "\n")] = 0;
     strcpy(juego.nombre, strip(linea));
     
     juego.cantidadCategorias = 0;
     fgets(linea, STRINGBUFFER, fp);
-    char *ptr = strtok(linea, ",");
+    ptr = strtok(linea, ",");
     while (ptr != NULL) {
         strcpy(juego.categorias[juego.cantidadCategorias++], strip(ptr));
         ptr = strtok(NULL, ",");

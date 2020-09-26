@@ -7,30 +7,38 @@
 char * strip(char *string) {
     char caracteresInvalidos[2] = {' ', '\n'};
     
-    int largo = strlen(string), inicio = -1, final = -1, esInvalido;
-    
-    esInvalido = 0;
+    int largo = strlen(string),
+    inicio = -1,
+    final = -1,
+    esValido;
+
     for (int i = 0; i < largo; i++) {
-        esInvalido = 0;
+        esValido = 1;
         for (int j = 0; j < 2; j++)
-            if (string[i] == caracteresInvalidos[j])
-                esInvalido = 1;
-        if (!esInvalido) {
+            if (string[i] == caracteresInvalidos[j]) {
+                esValido = 0;
+                break;
+            }
+        if (esValido) {
             inicio = i;
             break;
         }
     }
-    esInvalido = 0;
     for (int i = largo-1; i >= 0; i--) {
-        esInvalido = 0;
+        esValido = 1;
         for (int j = 0; j < 2; j++)
-            if (string[i] == caracteresInvalidos[j])
-                esInvalido = 1;
-        if (!esInvalido) {
+            if (string[i] == caracteresInvalidos[j]) {
+                esValido = 0;
+                break;
+            }
+        if (esValido) {
             final = i;
             break;
         }
     }
+
+    if (inicio == final == -1)
+        return "";
     
     char *strippedString = malloc(sizeof(char)*(final - inicio + 2));
     strippedString[final - inicio + 1] = 0;
