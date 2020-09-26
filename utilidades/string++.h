@@ -37,7 +37,7 @@ char * strip(char *string) {
         }
     }
 
-    if (inicio == final == -1)
+    if (inicio == final && inicio == -1)
         return "";
     
     char *strippedString = malloc(sizeof(char)*(final - inicio + 2));
