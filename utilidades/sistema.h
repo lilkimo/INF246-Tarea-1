@@ -7,7 +7,7 @@
 
 
 void crear_carpeta(char *direccion, char *carpeta){
-   mkdir(strcat(direccio, carpeta),S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal
+   mkdir(strcat(direccion, carpeta),S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal
    return;
 }
 
