@@ -5,7 +5,8 @@
 */
 
 char * strip(char *string) {
-    char caracteresInvalidos[2] = {' ', '\n'};
+    char caracteresInvalidos[] = {' ', '\n', '\r'};
+    int cantCarInv = 3;
     
     int largo = strlen(string),
     inicio = -1,
@@ -14,7 +15,7 @@ char * strip(char *string) {
 
     for (int i = 0; i < largo; i++) {
         esValido = 1;
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < cantCarInv; j++)
             if (string[i] == caracteresInvalidos[j]) {
                 esValido = 0;
                 break;
@@ -26,7 +27,7 @@ char * strip(char *string) {
     }
     for (int i = largo-1; i >= 0; i--) {
         esValido = 1;
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < cantCarInv; j++)
             if (string[i] == caracteresInvalidos[j]) {
                 esValido = 0;
                 break;
