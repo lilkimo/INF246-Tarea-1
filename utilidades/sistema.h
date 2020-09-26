@@ -89,7 +89,7 @@ void crear_carpeta(char *direccion, char *carpeta){
     return;
 }
 
-void copiar_archivo(char *destino, char *origen, char *nombre) {
+void copiar_archivo(char *destino, char *origen, int borrar) {
     char ch;
     FILE *source, *target;
     source = fopen(origen, "r");
@@ -97,13 +97,25 @@ void copiar_archivo(char *destino, char *origen, char *nombre) {
         printf("Error al abrir el archivo %s\n", origen);
         exit(EXIT_FAILURE);
     }
-    strcat(nombre,".txt");
-    strcat(destino,"/");
-    strcat(destino,nombre);
-    target = fopen(destino, "w");
+    
+    char ruta[255];
+    strcpy(ruta, destino);
+    if (ruta[strlen(ruta) - 1] != '/')
+        strcat(ruta, "/");
+    
+    char nombre[255];
+    char *ptr = strtok(origen, "/");
+    while (ptr != NULL) {
+        strcpy(nombre, ptr);
+        ptr = strtok(NULL, "/");
+    }   
+    
+    strcat(ruta, nombre);
+
+    target = fopen(ruta, "w");
     if(target == NULL ) {
         fclose(source);
-        printf("Error al crear el archivo\n");
+        printf("Error al crear el archivo %s\n", ruta);
         exit(EXIT_FAILURE);
     }
     while( ( ch = fgetc(source) ) != EOF )
@@ -111,10 +123,8 @@ void copiar_archivo(char *destino, char *origen, char *nombre) {
     fclose(source);
     fclose(target);
     
-    /*
-    if (!borrar) 
+    if (borrar) 
         remove(origen); // elimina el archivo de origen.
-    */
 
     return;
 }

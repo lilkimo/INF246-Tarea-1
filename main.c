@@ -83,7 +83,7 @@ int main() {
                 strcpy(destino, dirCategorias);
                 strcat(destino, categorias[j]);
 
-                //copiar_archivo(origen, destino, 0);
+                copiar_archivo(destino, origen, 1);
             }
     /*
     qsort(juegos, largoJuegos, sizeof(juego), criterioOrdenamiento);
