@@ -1,13 +1,14 @@
-/*
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-*/
+#include <string.h>
 
-void crear_carpeta(char *carpeta){
-    mkdir(carpeta,S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal
-    return;
+
+void crear_carpeta(char *direccion, char *carpeta){
+   mkdir(strcat(direccio, carpeta),S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal
+   return;
 }
 
 void copiar_archivo(char *destino, char *origen) {
