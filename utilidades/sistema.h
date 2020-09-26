@@ -15,6 +15,7 @@
 #include <dirent.h>
 */
 
+/*
 void consola (){
     DIR *dr;
     struct dirent *en;
@@ -75,9 +76,16 @@ juego * ls(char *direccion) {
     }
     return juegos;
 }
+*/
 
 void crear_carpeta(char *direccion, char *carpeta){
-    mkdir(strcat(direccion, carpeta),S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal
+    char direccionFinal[255];
+    strcpy(direccionFinal, direccion);
+    if (direccion[strlen(direccion) - 1] != '/' && carpeta[0] != '/')
+        strcat(direccionFinal, "/");
+    strcat(direccionFinal, carpeta);
+    
+    mkdir(direccionFinal, S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal
     return;
 }
 
