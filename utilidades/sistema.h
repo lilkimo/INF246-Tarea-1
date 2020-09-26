@@ -1,7 +1,9 @@
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+*/
 
 void crear_carpeta(char *carpeta){
     mkdir(carpeta,S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal

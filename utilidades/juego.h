@@ -1,3 +1,4 @@
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +7,7 @@
 
 // Modulos Propios
 #include "string++.h"
+*/
 
 #define STRINGBUFFER 255
 #define JUEGOSBUFFER 255
