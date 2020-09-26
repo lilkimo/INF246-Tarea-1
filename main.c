@@ -1,12 +1,16 @@
+// Modulos default.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// Modulos para hacer llamadas al sistema.
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h> // verificar
 
+#define STRINGBUFFER 255
+#define JUEGOSBUFFER 255
 // Modulos Propios
 #include "./utilidades/string++.h"
 #include "./utilidades/juego.h"
@@ -44,8 +48,12 @@ int criterioOrdenamiento(const void *juego1, const void *juego2) {
 }
 
 int main() {
+    
+    char dirBibloteca[] = "./juegos/";
+    char dirCategorias[] = "./categorias/";
+    
     int largoJuegos;
-    juego *juegos = obtenerJuegos("./juegos/", &largoJuegos);
+    juego *juegos = obtenerJuegos(dirBibloteca, &largoJuegos);
 
     crear_carpeta("./", "categorias");
     int largoCategorias, existe;
@@ -61,9 +69,22 @@ int main() {
             }
         if (!existe) {
             strcpy(categorias[largoCategorias++], categoria);
-            crear_carpeta("./categorias/", categoria);
+            crear_carpeta(dirCategorias, categoria);
         }
     }
+    
+    char origen[255], destino[255];
+    for (int i = 0; i < largoJuegos; i++)
+        for (int j = 0; j < largoCategorias; j++)
+            if (strcmp(juegos[i].categorias[0], categorias[j]) == 0) {
+                strcpy(origen, dirBibloteca);
+                strcat(origen, juegos[i].archivo);
+
+                strcpy(destino, dirCategorias);
+                strcat(destino, categorias[j]);
+
+                //copiar_archivo(origen, destino, 0);
+            }
     /*
     qsort(juegos, largoJuegos, sizeof(juego), criterioOrdenamiento);
     printf("Con QuickSort:\n");
@@ -71,6 +92,6 @@ int main() {
         printf("%s\n", juegos[i].nombre);
     }
     */
-
+    //free(juegos);
     return 0;
 }
