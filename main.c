@@ -5,24 +5,72 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <unistd.h> // verificar
 
 // Modulos Propios
 #include "./utilidades/string++.h"
 #include "./utilidades/juego.h"
+#include "./utilidades/sistema.h"
+
+int infoJuego(juego juego) {
+    if (juego.cantidadCategorias > 0 && juego.cantidadCategorias < 6) {
+        printf("%s\n", juego.nombre);
+        
+        printf("%s", juego.categorias[0]);
+        for (int j = 1; j < juego.cantidadCategorias; j++)
+            printf(", %s", juego.categorias[j]);
+        printf("\n");
+        
+        printf("%s\n", juego.autor);
+        printf("%s\n", juego.resumen);
+        
+        return 0;
+    }
+    return 1;
+}
+
+juego encontrarJuego(char *nombreArchivo, juego *juegos, int largo) {
+    for (int i = 0; i < largo; i++)
+        if (strcmp(nombreArchivo, juegos[i].archivo) == 0)
+            return juegos[i];
+    
+    juego juegoDefault;
+    juegoDefault.archivo[0] = juegoDefault.nombre[0] = juegoDefault.autor[0] = juegoDefault.resumen[0] = juegoDefault.cantidadCategorias = 0;
+    return juegoDefault;
+}
+
+int criterioOrdenamiento(const void *juego1, const void *juego2) {
+    return (*(juego*)juego2).cantidadCategorias - (*(juego*)juego1).cantidadCategorias;
+}
 
 int main() {
-    int largo;
-    juego *juegos = obtenerJuegos("./juegos/", &largo);
-    
-    for (int i = 0; i < largo; i++) {
-        printf("%s\n", juegos[i].nombre);
-        printf("%s", juegos[i].categorias[0]);
-        for (int j = 1; j < juegos[i].cantidadCategorias; j++)
-            printf(", %s", juegos[i].categorias[j]);
-        printf("\n");
-        printf("%s\n", juegos[i].autor);
-        printf("%s\n", juegos[i].resumen);
+    int largoJuegos;
+    juego *juegos = obtenerJuegos("./juegos/", &largoJuegos);
+
+    crear_carpeta("./", "categorias");
+    int largoCategorias, existe;
+    char categorias[5][STRINGBUFFER], categoria[STRINGBUFFER];
+    for (int i = 0; i < largoJuegos; i++) {
+        strcpy(categoria, juegos[i].categorias[0]);
+        existe = 0;
+
+        for (int j = 0; j < largoCategorias; j++)
+            if (strcmp(categorias[j], categoria) == 0) {
+                existe = 1;
+                break;
+            }
+        if (!existe) {
+            strcpy(categorias[largoCategorias++], categoria);
+            crear_carpeta("./categorias/", categoria);
+        }
     }
-    
+    /*
+    qsort(juegos, largoJuegos, sizeof(juego), criterioOrdenamiento);
+    printf("Con QuickSort:\n");
+    for (int i = 0; i < largoJuegos; i++) {
+        printf("%s\n", juegos[i].nombre);
+    }
+    */
+
     return 0;
 }
