@@ -10,7 +10,7 @@
 #include <unistd.h> // verificar
 
 #define STRINGBUFFER 255
-#define JUEGOSBUFFER 255
+#define ARCHIVOSBUFFER 255
 // Modulos Propios
 #include "./utilidades/string++.h"
 #include "./utilidades/juego.h"
@@ -47,51 +47,36 @@ int criterioOrdenamiento(const void *juego1, const void *juego2) {
     return -(*(juego*)juego2).cantidadCategorias + (*(juego*)juego1).cantidadCategorias;
 }
 
-
 char * cd(char *comando){
-    printf("%s\n",comando);
-    char *nueva_direccion = malloc(sizeof(char)*255);
+    chopN(comando, 3);
+    comando[strlen(comando) - 1] = 0;
+    char *nueva_direccion = (char *)malloc(sizeof(char)*255);
     if (strlen(comando) == 2){
         strcat(comando, "/");
-        strcat(nueva_direccion, comando);
+        strcpy(nueva_direccion, comando);
     }
     else{
-        char *nuevo_comando = comando + 3;
-        strcat(nuevo_comando,"/");
-        strcat(nueva_direccion, nuevo_comando);
+        strcat(comando,"/");
+        strcpy(nueva_direccion, comando);
     }
     return nueva_direccion;
 }
 
-void ls(char *direccion, juego *juegos, int largo) {
-    char *extension;
-    int indice = 0;
-    juego juego_actual;
-    juego juegos_cat[largo];
+int indexar(char* direccion, char contenido[STRINGBUFFER][ARCHIVOSBUFFER]) {
     DIR *dir;
     struct dirent *ent;
-    dir = opendir(direccion);
-    if(dir!= NULL){
-        while ((ent = readdir(dir)) != NULL) {
-            extension = strrchr(ent->d_name, '.');
-            if (extension && !strcmp(extension, ".txt")) {
-                juego_actual = encontrarJuego(ent->d_name, juegos, largo);
-                juegos_cat[indice++] = juego_actual;
-            }
-            else{
-                printf("%s\n",ent->d_name);
-            }
-        }
+
+    int largo = 0;
+    if((dir = opendir(direccion)) != NULL){
+        while ((ent = readdir(dir)) != NULL)
+            if (ent->d_name[0] != '.')
+                strcpy(contenido[largo++], ent->d_name);
         closedir(dir);
     }
-    else{
+    else
         printf("Error al abrir el directorio %s\n",direccion);
-    }
-    qsort(juegos_cat, indice, sizeof(juego), criterioOrdenamiento);
-    for (int i = 0; i < indice; i++) {
-        printf("%s\n", juegos_cat[i].archivo);
-    }
-    return;
+    
+    return largo;
 }
 
 void abrir_texto(){
@@ -102,8 +87,8 @@ int main() {
     char dirBibloteca[] = "./juegos/";
     char dirCategorias[] = "./categorias/";
     
-    int largoJuegos;
-    juego *juegos = obtenerJuegos(dirBibloteca, &largoJuegos);
+    juego juegos[ARCHIVOSBUFFER];
+    int largoJuegos = obtenerJuegos(juegos, dirBibloteca);
 
     crear_carpeta("./", "categorias");
     int largoCategorias, existe;
@@ -123,7 +108,7 @@ int main() {
         }
     }
     
-    char origen[255], destino[255];
+    char origen[STRINGBUFFER], destino[STRINGBUFFER];
     for (int i = 0; i < largoJuegos; i++)
         for (int j = 0; j < largoCategorias; j++)
             if (strcmp(juegos[i].categorias[0], categorias[j]) == 0) {
@@ -136,28 +121,64 @@ int main() {
                 copiar_archivo(destino, origen, 0);
             }
 
-    int flag = 1;
-    char direccion[255] = "./";
+    int flag = 1, largoContenido;
+    char direccion[255] = "./",
+    comando[255],
+    contenido[ARCHIVOSBUFFER][STRINGBUFFER];
     while(flag){
-        char comando[255];
-        printf("Escriba un comando: ");
+        largoContenido = indexar(direccion, contenido);
+        printf("~%s> ", direccion);
+
         fgets(comando, 255, stdin);
-        if (strncmp(comando, "cd", 2) == 0){
-            strcpy(direccion,cd(comando));
+        if (!strncmp(comando, "cd", 2)){
+            strcat(direccion, cd(comando));
         }
-        else if(strncmp(comando, "ls", 2) == 0){
-            ls(direccion, juegos, largoJuegos);
-        }
-        else{
-            if (strncmp(comando, "open", 4) == 0){
-                abrir_texto(comando);
+        else if(!strncmp(comando, "ls", 2)){
+            char *extension;
+            int largoJI = 0;
+            juego juegosIndexados[ARCHIVOSBUFFER];
+            for (int i = 0; i < largoContenido; i++) {
+                extension = strrchr(contenido[i], '.');
+                if (extension && !strcmp(extension, ".txt"))
+                    juegosIndexados[largoJI++] = encontrarJuego(contenido[i], juegos, largoJuegos);
+                else
+                    printf("%s\n", contenido[i]);
             }
-            else{
-                flag = 0;
-                printf("Hasta la proximaaaaaa...");
-            }
+
+            qsort(juegosIndexados, largoJI, sizeof(juego), criterioOrdenamiento);
+            for (int i = 0; i < largoJI; i++)
+                printf("%s\n", juegosIndexados[i].archivo);
         }
+        else if (strncmp(comando, "open", 4) == 0){
+            comando[strlen(comando) - 1] = 0;
+            chopN(comando, 5);
+            
+            int existe = 0;
+            for (int i = 0; i < largoContenido; i++)
+                if (!strcmp(comando, contenido[i])) {
+                    existe = 1;
+                    break;
+                }
+            if (!existe)
+                printf("El archivo solicitado no existe.\n");
+
+            char *extension;
+            extension = strrchr(comando, '.');
+            if (!extension || strcmp(extension, ".txt")) {
+                printf("El archivo solicitado no es un juego (debe terminar en .txt).\n");
+                continue;
+            }
+
+            juego juegoSolicitado = encontrarJuego(comando, juegos, largoJuegos);
+            printf("%s\n%s", juegoSolicitado.nombre, juegoSolicitado.categorias[0]);
+            
+            for (int i = 1; i < juegoSolicitado.cantidadCategorias; i++)
+                printf(", %s", juegoSolicitado.categorias[i]);
+            printf("\n%s\n%s\n", juegoSolicitado.autor, juegoSolicitado.resumen);
+        }
+        else if (!strncmp(comando, "exit", 4))
+            flag = 0;
     }
-    free(juegos);
+    
     return 0;
 }

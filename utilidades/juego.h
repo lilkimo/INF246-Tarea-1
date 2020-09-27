@@ -9,8 +9,8 @@
 #include "string++.h"
 */
 
-#define STRINGBUFFER 255
-#define JUEGOSBUFFER 255
+//#define STRINGBUFFER 255
+//#define ARCHIVOSBUFFER 255
 
 typedef struct {
     char archivo[STRINGBUFFER];
@@ -43,30 +43,29 @@ juego obtenerJuego(char *direccion) {
     }
 
     fgets(linea, 255, fp);
-    strcpy(juego.nombre, strtrp(linea));
+    strtrp(juego.nombre, linea);
     
     juego.cantidadCategorias = 0;
     fgets(linea, STRINGBUFFER, fp);
     ptr = strtok(linea, ",");
     while (ptr != NULL) {
-        strcpy(juego.categorias[juego.cantidadCategorias++], strtrp(ptr));
+        strtrp(juego.categorias[juego.cantidadCategorias++], ptr);
         ptr = strtok(NULL, ",");
     }
 
     fgets(linea, STRINGBUFFER, fp);
-    strcpy(juego.autor, strtrp(linea));
+    strtrp(juego.autor, linea);
     
     fgets(linea, STRINGBUFFER, fp);
     linea[strcspn(linea, "\n")] = 0;
-    strcpy(juego.resumen, strtrp(linea));
+    strtrp(juego.resumen, linea);
     
 
     fclose(fp);
     return juego;
 }
 
-juego * obtenerJuegos(char *directorio, int *largo) {
-    juego *juegos;
+int obtenerJuegos(juego *juegos, char *directorio) {
     int indice = 0;
 
     char direccion[STRINGBUFFER];
@@ -75,8 +74,6 @@ juego * obtenerJuegos(char *directorio, int *largo) {
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir(directorio)) != NULL) {
-        juegos = (juego *)malloc(sizeof(juego)*JUEGOSBUFFER);
-        
         while ((ent = readdir(dir)) != NULL) {
             extension = strrchr(ent->d_name, '.');
             if (extension && !strcmp(extension, ".txt")) {
@@ -87,12 +84,9 @@ juego * obtenerJuegos(char *directorio, int *largo) {
             }
         }
         closedir(dir);
-        
-        juegos = (juego *)realloc(juegos, sizeof(juego)*indice);
     }
     else 
         perror("Error al abrir la carpeta juegos");
     
-    *largo = indice;
-    return juegos;
+    return indice;
 }

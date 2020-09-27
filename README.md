@@ -3,7 +3,7 @@ Camilo Gonzalez, 201873550-7
 
 Zarko Kuljis, 201823523-7
 # Consideraciones
-El nombre del archivo y el nombre del juego deben ser el mismo.
+Se asume como juego a todo archivo con la extensión .txt
 
 Cada línea de los archivos debe tener 255 carácteres o menos.
 
