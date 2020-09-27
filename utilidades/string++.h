@@ -1,5 +1,4 @@
-#include <string.h>
-
+//#include <string.h>
 char * strctrp(char *string, char *caracteresInvalidos) {
     int largo = strlen(string),
     cantCarInv = strlen(caracteresInvalidos),
