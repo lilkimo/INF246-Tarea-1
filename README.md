@@ -9,14 +9,17 @@ Cada línea de los archivos debe tener 255 carácteres o menos.
 
 Cada parámetro de los juegos (Nombre, Categorías, Empresa Autora y Resumen) debe ocupar exactamente una línea.
 
-Asumimos que, de acuerdo a la semántica de la palabra 'categoría', es imposible que se de el caso en que una categoría sólo se manifieste en un juego. Es decir, cada categoría estará presente en al menos dos juegos.
+La Consola sólo indexa un directorio a la vez (Es decir, comandos como `open Shooter/Valorant.txt` no funcionarán, y se deberá actuar de la forma `cd Shooter` y luego `open Valorant.txt`).
 
-En consola, solo se puede avanzar de un directorio a la vez.
+**Al finalizar el programa se borrará todo el contenido dentro de la carpeta 'categorias'.** Esto para evitar conflictos con el uso posterior.
 
+**Debe** usar el comando `exit`. Finalizar a la fuerza el programa puede ocasionar el **mal funcionamiento** del mismo.
+Si usted se encuenta en esta situación una posible solución es **borrar la carpeta 'categorías'**.
 # Comandos de Consola:
-
-cd 'Nombre_Carpeta': avanza a la carpeta de nombre 'Nombre_Carpeta'. Si es ' .. ', retrocede a la carpeta anterior.
+exit: Finaliza el programa.
 
 ls: Muestra los contenidos de la carpeta actual.
 
-open 'Nombre_archivo': Muestra los contenidos del archivo de texto.
+cd \<Nombre de la carpeta\>: Avanza a la carpeta de nombre \<Nombre de la carpeta\>. Si es ' .. ', retrocede a la carpeta anterior.
+
+open \<Nombre del Juego\>: Muestra los contenidos del juego, que deberá ser un .txt que cumpla los requisitos impuestos por el enunciado.

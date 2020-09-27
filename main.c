@@ -9,8 +9,8 @@
 #include <dirent.h>
 #include <unistd.h> // verificar
 
-#define STRINGBUFFER 255
-#define ARCHIVOSBUFFER 255
+#define STRINGBUFFER 256
+#define ARCHIVOSBUFFER 256
 // Modulos Propios
 #include "./utilidades/string++.h"
 #include "./utilidades/juego.h"
@@ -35,7 +35,7 @@ int infoJuego(juego juego) {
 
 juego encontrarJuego(char *nombreArchivo, juego *juegos, int largo) {
     for (int i = 0; i < largo; i++)
-        if (strcmp(nombreArchivo, juegos[i].archivo) == 0)
+        if (!strcmp(nombreArchivo, juegos[i].archivo))
             return juegos[i];
     
     juego juegoDefault;
@@ -106,18 +106,18 @@ int main() {
             }
 
     int flag = 1, largoContenido, largoComando;
-    char *extension, direccion[255] = "./",
-    comando[255],
+    char *extension, direccion[STRINGBUFFER] = "./",
+    comando[STRINGBUFFER],
     contenido[ARCHIVOSBUFFER][STRINGBUFFER];
     while(flag){
         largoContenido = indexar(direccion, contenido);
         if (largoContenido != -1) {
             printf("%s> ", direccion);
-            fgets(comando, 255, stdin);
+            fgets(comando, STRINGBUFFER, stdin);
         }
         else if (!strcmp(direccion, "./")) {
             printf("Error inesperado, finalizando programa...");
-            return 1;
+            break;
         }
         else {
             strcpy(comando, "cd ..");
@@ -225,5 +225,20 @@ int main() {
         }
     }
     
+    DIR *carpeta;
+    struct dirent *archivo;
+    char direccionCarpeta[STRINGBUFFER], direccionArchivo[STRINGBUFFER];
+    for (int i = 0; i < largoCategorias; i++) {
+        strcpy(direccionCarpeta, dirCategorias);
+        strcat(direccionCarpeta, categorias[i]);
+        carpeta = opendir(direccionCarpeta);
+        while ((archivo = readdir(carpeta)) != NULL) {
+            strcpy(direccionArchivo, direccionCarpeta);
+            strcat(direccionArchivo, "/");
+            strcat(direccionArchivo, archivo->d_name);
+            remove(direccionArchivo);
+        }
+        rmdir(direccionCarpeta);
+    }
     return 0;
 }
