@@ -40,6 +40,16 @@ void strctrp(char *destino, const char *origen, char *caracteresInvalidos) {
     destino[largo2] = 0;
 }
 
+//Borra los primeros n caracteres de str
+size_t chopN(char *str, size_t n)
+{
+    size_t len = strlen(str);
+    if (n > len)
+        n = len;
+    memmove(str, str+n, len - n + 1);
+    return(len - n);
+}
+
 // strip
 void strtrp(char *destino, const char *origen) {
     strctrp(destino, origen, " \n\r");
