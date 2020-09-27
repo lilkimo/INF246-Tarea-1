@@ -39,7 +39,8 @@ juego encontrarJuego(char *nombreArchivo, juego *juegos, int largo) {
             return juegos[i];
     
     juego juegoDefault;
-    juegoDefault.archivo[0] = juegoDefault.nombre[0] = juegoDefault.autor[0] = juegoDefault.resumen[0] = juegoDefault.cantidadCategorias = 0;
+    strcpy(juegoDefault.archivo, nombreArchivo);
+    juegoDefault.nombre[0] = juegoDefault.autor[0] = juegoDefault.resumen[0] = juegoDefault.cantidadCategorias = 0;
     return juegoDefault;
 }
 
@@ -171,8 +172,9 @@ int main() {
             }
 
             juego juegoSolicitado = encontrarJuego(comando, juegos, largoJuegos);
-            if (juegoSolicitado.cantidadCategorias == 0)
+            if (juegoSolicitado.cantidadCategorias == 0) {
                 printf("No se puede abrir %s (Revise que la estructura pertenezca a la de un Juego.)\n", comando);
+            }
             printf("%s\n%s", juegoSolicitado.nombre, juegoSolicitado.categorias[0]);
             
             for (int i = 1; i < juegoSolicitado.cantidadCategorias; i++)
