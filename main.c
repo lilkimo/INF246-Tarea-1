@@ -44,7 +44,58 @@ juego encontrarJuego(char *nombreArchivo, juego *juegos, int largo) {
 }
 
 int criterioOrdenamiento(const void *juego1, const void *juego2) {
-    return (*(juego*)juego2).cantidadCategorias - (*(juego*)juego1).cantidadCategorias;
+    return -(*(juego*)juego2).cantidadCategorias + (*(juego*)juego1).cantidadCategorias;
+}
+
+
+char * cd(char *comando){
+    printf("%s\n",comando);
+    char *nueva_direccion = malloc(sizeof(char)*255);
+    if (strlen(comando) == 2){
+        strcat(comando, "/");
+        strcat(nueva_direccion, comando);
+    }
+    else{
+        char *nuevo_comando = comando + 3;
+        strcat(nuevo_comando,"/");
+        strcat(nueva_direccion, nuevo_comando);
+    }
+    return nueva_direccion;
+}
+
+void ls(char *direccion, juego *juegos, int largo) {
+    char *extension;
+    int indice = 0;
+    juego juego_actual;
+    juego juegos_cat[largo];
+    DIR *dir;
+    struct dirent *ent;
+    dir = opendir(direccion);
+    if(dir!= NULL){
+        while ((ent = readdir(dir)) != NULL) {
+            extension = strrchr(ent->d_name, '.');
+            if (extension && !strcmp(extension, ".txt")) {
+                juego_actual = encontrarJuego(ent->d_name, juegos, largo);
+                juegos_cat[indice++] = juego_actual;
+            }
+            else{
+                printf("%s\n",ent->d_name);
+            }
+        }
+        closedir(dir);
+    }
+    else{
+        printf("Error al abrir el directorio %s\n",direccion);
+    }
+    qsort(juegos_cat, indice, sizeof(juego), criterioOrdenamiento);
+    for (int i = 0; i < indice; i++) {
+        printf("%s\n", juegos_cat[i].archivo);
+    }
+    return;
+}
+
+void abrir_texto(){
+    return;
 }
 
 int main() {
@@ -82,15 +133,31 @@ int main() {
                 strcpy(destino, dirCategorias);
                 strcat(destino, categorias[j]);
 
-                copiar_archivo(destino, origen, 1);
+                copiar_archivo(destino, origen, 0);
             }
-    /*
-    qsort(juegos, largoJuegos, sizeof(juego), criterioOrdenamiento);
-    printf("Con QuickSort:\n");
-    for (int i = 0; i < largoJuegos; i++) {
-        printf("%s\n", juegos[i].nombre);
+
+    int flag = 1;
+    char direccion[255] = "./";
+    while(flag){
+        char comando[255];
+        printf("Escriba un comando: ");
+        fgets(comando, 255, stdin);
+        if (strncmp(comando, "cd", 2) == 0){
+            strcpy(direccion,cd(comando));
+        }
+        else if(strncmp(comando, "ls", 2) == 0){
+            ls(direccion, juegos, largoJuegos);
+        }
+        else{
+            if (strncmp(comando, "open", 4) == 0){
+                abrir_texto(comando);
+            }
+            else{
+                flag = 0;
+                printf("Hasta la proximaaaaaa...");
+            }
+        }
     }
-    */
     free(juegos);
     return 0;
 }
