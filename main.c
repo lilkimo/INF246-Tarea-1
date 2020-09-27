@@ -102,8 +102,8 @@ int main() {
                 copiar_archivo(destino, origen, 0);
             }
 
-    int flag = 1, largoContenido;
-    char direccion[255] = "./",
+    int flag = 1, largoContenido, largoComando;
+    char *extension, direccion[255] = "./",
     comando[255],
     contenido[ARCHIVOSBUFFER][STRINGBUFFER];
     while(flag){
@@ -111,10 +111,12 @@ int main() {
         printf("%s> ", direccion);
 
         fgets(comando, 255, stdin);
+        largoComando = strlen(comando);
+        comando[--largoComando] = 0;
+
         if (!strncmp(comando, "cd ", 3)){
             chopN(comando, 3);
-            int largoComando = strlen(comando);
-            comando[--largoComando] = 0;
+            largoComando -= 3;
 
             if (comando[largoComando - 1] != '/') {
                 largoComando++;
@@ -131,7 +133,7 @@ int main() {
                     }
                 }
                 else {
-                    int existe = 0;
+                    existe = 0;
                     for (int i = 0; i < largoContenido; i++) {
                         if (!strncmp(comando, contenido[i], largoComando-1)) {
                             existe = 1;
@@ -147,8 +149,35 @@ int main() {
                 }
             }
         }
-        else if(!strncmp(comando, "ls ", 3)){
-            char *extension;
+        else if (strncmp(comando, "open ", 5) == 0){
+            chopN(comando, 5);
+            largoComando -= 5;
+            
+            existe = 0;
+            for (int i = 0; i < largoContenido; i++)
+                if (!strcmp(comando, contenido[i])) {
+                    existe = 1;
+                    break;
+                }
+            if (!existe) {
+                printf("El archivo solicitado no existe.\n");
+                continue;
+            }
+
+            extension = strrchr(comando, '.');
+            if (!extension || strcmp(extension, ".txt")) {
+                printf("El archivo solicitado no es un juego (debe terminar en .txt).\n");
+                continue;
+            }
+
+            juego juegoSolicitado = encontrarJuego(comando, juegos, largoJuegos);
+            printf("%s\n%s", juegoSolicitado.nombre, juegoSolicitado.categorias[0]);
+            
+            for (int i = 1; i < juegoSolicitado.cantidadCategorias; i++)
+                printf(", %s", juegoSolicitado.categorias[i]);
+            printf("\n%s\n%s\n", juegoSolicitado.autor, juegoSolicitado.resumen);
+        }
+        else if(!strcmp(comando, "ls")) {
             int largoJI = 0;
             juego juegosIndexados[ARCHIVOSBUFFER];
             for (int i = 0; i < largoContenido; i++) {
@@ -163,40 +192,10 @@ int main() {
             for (int i = 0; i < largoJI; i++)
                 printf("%s\n", juegosIndexados[i].archivo);
         }
-        else if (strncmp(comando, "open ", 5) == 0){
-            comando[strlen(comando) - 1] = 0;
-            chopN(comando, 5);
-            
-            int existe = 0;
-            for (int i = 0; i < largoContenido; i++)
-                if (!strcmp(comando, contenido[i])) {
-                    existe = 1;
-                    break;
-                }
-            if (!existe) {
-                printf("El archivo solicitado no existe.\n");
-                continue;
-            }
-
-            char *extension;
-            extension = strrchr(comando, '.');
-            if (!extension || strcmp(extension, ".txt")) {
-                printf("El archivo solicitado no es un juego (debe terminar en .txt).\n");
-                continue;
-            }
-
-            juego juegoSolicitado = encontrarJuego(comando, juegos, largoJuegos);
-            printf("%s\n%s", juegoSolicitado.nombre, juegoSolicitado.categorias[0]);
-            
-            for (int i = 1; i < juegoSolicitado.cantidadCategorias; i++)
-                printf(", %s", juegoSolicitado.categorias[i]);
-            printf("\n%s\n%s\n", juegoSolicitado.autor, juegoSolicitado.resumen);
-        }
-        else if (!strncmp(comando, "exit", strlen(comando) - 1))
+        else if (!strcmp(comando, "exit"))
             flag = 0;
         else {
-            comando[strlen(comando) - 1] = 0;
-            printf("%s no es un comando válido.\n", comando);
+            printf("%s no es una sentencia válida.\n", comando);
             continue;
         }
     }
