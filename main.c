@@ -47,21 +47,6 @@ int criterioOrdenamiento(const void *juego1, const void *juego2) {
     return -(*(juego*)juego2).cantidadCategorias + (*(juego*)juego1).cantidadCategorias;
 }
 
-char * cd(char *comando){
-    chopN(comando, 3);
-    comando[strlen(comando) - 1] = 0;
-    char *nueva_direccion = (char *)malloc(sizeof(char)*255);
-    if (strlen(comando) == 2){
-        strcat(comando, "/");
-        strcpy(nueva_direccion, comando);
-    }
-    else{
-        strcat(comando,"/");
-        strcpy(nueva_direccion, comando);
-    }
-    return nueva_direccion;
-}
-
 int indexar(char* direccion, char contenido[STRINGBUFFER][ARCHIVOSBUFFER]) {
     DIR *dir;
     struct dirent *ent;
@@ -74,13 +59,9 @@ int indexar(char* direccion, char contenido[STRINGBUFFER][ARCHIVOSBUFFER]) {
         closedir(dir);
     }
     else
-        printf("Error al abrir el directorio %s\n",direccion);
+        printf("Error al indexar el directorio %s\n",direccion);
     
     return largo;
-}
-
-void abrir_texto(){
-    return;
 }
 
 int main() {
@@ -127,11 +108,39 @@ int main() {
     contenido[ARCHIVOSBUFFER][STRINGBUFFER];
     while(flag){
         largoContenido = indexar(direccion, contenido);
-        printf("~%s> ", direccion);
+        printf("%s> ", direccion);
 
         fgets(comando, 255, stdin);
         if (!strncmp(comando, "cd", 2)){
-            strcat(direccion, cd(comando));
+            chopN(comando, 3);
+            int largoComando = strlen(comando);
+            comando[--largoComando] = 0;
+
+            if (comando[largoComando - 1] != '/')
+                strcat(comando,"/");
+
+            if (strcmp(comando, "./")) {
+                if (!strcmp(comando, "../")) {
+                    for (int i = strlen(direccion) - 2; i > 0; i--) {
+                        if (direccion[i] == '/') {
+                            direccion[i+1] = 0;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    int existe = 0;
+                    for (int i = 0; i < largoContenido; i++)
+                        if (!strcmp(comando, contenido[i])) {
+                            existe = 1;
+                            break;
+                        }
+                    if (!existe)
+                        printf("El directorio seleccionado no existe.\n");
+                    else
+                        strcat(direccion, comando);
+                }
+            }
         }
         else if(!strncmp(comando, "ls", 2)){
             char *extension;
@@ -178,6 +187,10 @@ int main() {
         }
         else if (!strncmp(comando, "exit", 4))
             flag = 0;
+        else {
+            comando[strlen(comando) - 1] = 0;
+            printf("%s no es un comando válido.\n", comando);
+        }
     }
     
     return 0;
