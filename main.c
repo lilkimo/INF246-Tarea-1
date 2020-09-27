@@ -59,8 +59,10 @@ int indexar(char* direccion, char contenido[STRINGBUFFER][ARCHIVOSBUFFER]) {
                 strcpy(contenido[largo++], ent->d_name);
         closedir(dir);
     }
-    else
+    else {
         printf("Error al indexar el directorio %s\n",direccion);
+        return -1;
+    }
     
     return largo;
 }
@@ -109,11 +111,22 @@ int main() {
     contenido[ARCHIVOSBUFFER][STRINGBUFFER];
     while(flag){
         largoContenido = indexar(direccion, contenido);
-        printf("%s> ", direccion);
+        if (largoContenido != -1) {
+            printf("%s> ", direccion);
+            fgets(comando, 255, stdin);
+        }
+        else if (!strcmp(direccion, "./")) {
+            printf("Error inesperado, finalizando programa...");
+            return 1;
+        }
+        else {
+            strcpy(comando, 'cd ..');
+            printf("%s> %s\n", direccion, comando);
+        }
 
-        fgets(comando, 255, stdin);
         largoComando = strlen(comando);
-        comando[--largoComando] = 0;
+        if (comando[largoComando - 1] == '\n')
+            comando[--largoComando] = 0;
 
         if (!strncmp(comando, "cd ", 3)){
             chopN(comando, 3);
@@ -145,8 +158,15 @@ int main() {
                         printf("El directorio seleccionado no existe.\n");
                         continue;
                     }
-                    else
-                        strcat(direccion, comando);
+                    else {
+                        extension = strrchr(comando, '.');
+                        if (extension) {
+                            printf("%s no es un directorio.\n", comando);
+                            continue;
+                        }
+                        else
+                            strcat(direccion, comando);
+                    }
                 }
             }
         }
