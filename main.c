@@ -99,7 +99,7 @@ int main() {
                 strcpy(destino, dirCategorias);
                 strcat(destino, categorias[j]);
 
-                copiar_archivo(destino, origen, 0);
+                copiar_archivo(destino, origen, 1);
             }
 
     int flag = 1, largoContenido, largoComando;
