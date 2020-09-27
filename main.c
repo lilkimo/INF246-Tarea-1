@@ -145,8 +145,15 @@ int main() {
                         printf("El directorio seleccionado no existe.\n");
                         continue;
                     }
-                    else
-                        strcat(direccion, comando);
+                    else {
+                        extension = strrchr(comando, '.');
+                        if (extension && !strcmp(extension, ".txt")) {
+                            printf("%s no es un directorio.\n", comando);
+                            continue;
+                        }
+                        else
+                            strcat(direccion, comando);
+                    }
                 }
             }
         }
