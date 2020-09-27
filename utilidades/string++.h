@@ -1,6 +1,6 @@
 //#include <string.h>
-char * strctrp(char *string, char *caracteresInvalidos) {
-    int largo = strlen(string),
+void strctrp(char *destino, const char *origen, char *caracteresInvalidos) {
+    int largo = strlen(origen),
     cantCarInv = strlen(caracteresInvalidos),
     inicio = -1,
     final = -1,
@@ -9,7 +9,7 @@ char * strctrp(char *string, char *caracteresInvalidos) {
     for (int i = 0; i < largo; i++) {
         esValido = 1;
         for (int j = 0; j < cantCarInv; j++)
-            if (string[i] == caracteresInvalidos[j]) {
+            if (origen[i] == caracteresInvalidos[j]) {
                 esValido = 0;
                 break;
             }
@@ -21,7 +21,7 @@ char * strctrp(char *string, char *caracteresInvalidos) {
     for (int i = largo-1; i >= 0; i--) {
         esValido = 1;
         for (int j = 0; j < cantCarInv; j++)
-            if (string[i] == caracteresInvalidos[j]) {
+            if (origen[i] == caracteresInvalidos[j]) {
                 esValido = 0;
                 break;
             }
@@ -32,18 +32,15 @@ char * strctrp(char *string, char *caracteresInvalidos) {
     }
 
     if (inicio == final && inicio == -1)
-        return "";
+        return;
     
-    char *strippedString = malloc(sizeof(char)*(final - inicio + 2));
-    strippedString[final - inicio + 1] = 0;
-
-    for (int i = inicio, j = 0; i <= final; i++)
-        strippedString[j++] = string[i];
-
-    return strippedString;
+    int largo2 = 0;
+    for (int i = inicio; i <= final; i++)
+        destino[largo2++] = origen[i];
+    destino[largo2] = 0;
 }
 
 // strip
-char * strtrp(char *string) {
-    return strctrp(string, " \n\r");
+void strtrp(char *destino, const char *origen) {
+    strctrp(destino, origen, " \n\r");
 }
