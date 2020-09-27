@@ -1,14 +1,8 @@
-/*
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-*/
 
-char * strip(char *string) {
-    char caracteresInvalidos[] = {' ', '\n', '\r'};
-    int cantCarInv = 3;
-    
+char * strctrp(char *string, char *caracteresInvalidos) {
     int largo = strlen(string),
+    cantCarInv = strlen(caracteresInvalidos),
     inicio = -1,
     final = -1,
     esValido;
@@ -48,4 +42,9 @@ char * strip(char *string) {
         strippedString[j++] = string[i];
 
     return strippedString;
+}
+
+// strip
+char * strtrp(char *string) {
+    return strctrp(string, " \n\r");
 }

@@ -43,22 +43,22 @@ juego obtenerJuego(char *direccion) {
     }
 
     fgets(linea, 255, fp);
-    strcpy(juego.nombre, strip(linea));
+    strcpy(juego.nombre, strtrp(linea));
     
     juego.cantidadCategorias = 0;
     fgets(linea, STRINGBUFFER, fp);
     ptr = strtok(linea, ",");
     while (ptr != NULL) {
-        strcpy(juego.categorias[juego.cantidadCategorias++], strip(ptr));
+        strcpy(juego.categorias[juego.cantidadCategorias++], strtrp(ptr));
         ptr = strtok(NULL, ",");
     }
 
     fgets(linea, STRINGBUFFER, fp);
-    strcpy(juego.autor, strip(linea));
+    strcpy(juego.autor, strtrp(linea));
     
     fgets(linea, STRINGBUFFER, fp);
     linea[strcspn(linea, "\n")] = 0;
-    strcpy(juego.resumen, strip(linea));
+    strcpy(juego.resumen, strtrp(linea));
     
 
     fclose(fp);
