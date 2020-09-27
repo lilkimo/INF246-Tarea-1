@@ -171,6 +171,8 @@ int main() {
             }
 
             juego juegoSolicitado = encontrarJuego(comando, juegos, largoJuegos);
+            if (juegoSolicitado.cantidadCategorias == 0)
+                printf("No se puede abrir %s (Revise que la estructura pertenezca a la de un Juego.)\n", comando);
             printf("%s\n%s", juegoSolicitado.nombre, juegoSolicitado.categorias[0]);
             
             for (int i = 1; i < juegoSolicitado.cantidadCategorias; i++)
