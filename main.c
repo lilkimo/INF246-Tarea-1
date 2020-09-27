@@ -111,7 +111,7 @@ int main() {
         printf("%s> ", direccion);
 
         fgets(comando, 255, stdin);
-        if (!strncmp(comando, "cd", 2)){
+        if (!strncmp(comando, "cd ", 3)){
             chopN(comando, 3);
             int largoComando = strlen(comando);
             comando[--largoComando] = 0;
@@ -147,7 +147,7 @@ int main() {
                 }
             }
         }
-        else if(!strncmp(comando, "ls", 2)){
+        else if(!strncmp(comando, "ls ", 3)){
             char *extension;
             int largoJI = 0;
             juego juegosIndexados[ARCHIVOSBUFFER];
@@ -163,7 +163,7 @@ int main() {
             for (int i = 0; i < largoJI; i++)
                 printf("%s\n", juegosIndexados[i].archivo);
         }
-        else if (strncmp(comando, "open", 4) == 0){
+        else if (strncmp(comando, "open ", 5) == 0){
             comando[strlen(comando) - 1] = 0;
             chopN(comando, 5);
             
