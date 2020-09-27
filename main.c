@@ -116,8 +116,10 @@ int main() {
             int largoComando = strlen(comando);
             comando[--largoComando] = 0;
 
-            if (comando[largoComando - 1] != '/')
+            if (comando[largoComando - 1] != '/') {
+                largoComando++;
                 strcat(comando,"/");
+            }
 
             if (strcmp(comando, "./")) {
                 if (!strcmp(comando, "../")) {
@@ -130,13 +132,16 @@ int main() {
                 }
                 else {
                     int existe = 0;
-                    for (int i = 0; i < largoContenido; i++)
-                        if (!strcmp(comando, contenido[i])) {
+                    for (int i = 0; i < largoContenido; i++) {
+                        if (!strncmp(comando, contenido[i], largoComando-1)) {
                             existe = 1;
                             break;
                         }
-                    if (!existe)
+                    }
+                    if (!existe) {
                         printf("El directorio seleccionado no existe.\n");
+                        continue;
+                    }
                     else
                         strcat(direccion, comando);
                 }
@@ -168,8 +173,10 @@ int main() {
                     existe = 1;
                     break;
                 }
-            if (!existe)
+            if (!existe) {
                 printf("El archivo solicitado no existe.\n");
+                continue;
+            }
 
             char *extension;
             extension = strrchr(comando, '.');
@@ -185,11 +192,12 @@ int main() {
                 printf(", %s", juegoSolicitado.categorias[i]);
             printf("\n%s\n%s\n", juegoSolicitado.autor, juegoSolicitado.resumen);
         }
-        else if (!strncmp(comando, "exit", 4))
+        else if (!strncmp(comando, "exit", strlen(comando) - 1))
             flag = 0;
         else {
             comando[strlen(comando) - 1] = 0;
             printf("%s no es un comando válido.\n", comando);
+            continue;
         }
     }
     
