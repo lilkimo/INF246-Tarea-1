@@ -120,7 +120,7 @@ int main() {
             return 1;
         }
         else {
-            strcpy(comando, 'cd ..');
+            strcpy(comando, "cd ..");
             printf("%s> %s\n", direccion, comando);
         }
 
