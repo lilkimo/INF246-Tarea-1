@@ -3,3 +3,5 @@ main.out
 test.c
 test.out
 categorias/
+main.o
+output
