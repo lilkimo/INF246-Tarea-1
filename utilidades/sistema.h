@@ -85,7 +85,7 @@ void crear_carpeta(char *direccion, char *carpeta){
         strcat(direccionFinal, "/");
     strcat(direccionFinal, carpeta);
     
-    mkdir(direccionFinal, S_IRUSR); // El segundo parametro son los permisos, el que coloque es temporal
+    mkdir(direccionFinal, S_IRWXU | S_IRWXG | S_IRWXO); // https://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
     return;
 }
 
