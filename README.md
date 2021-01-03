@@ -2,6 +2,8 @@
 Camilo Gonzalez, 201873550-7
 
 Zarko Kuljis, 201823523-7
+
+Nos pusieron un 100.
 # Uso
 Ejecute el Makefile y abra el archivo `output`. Para manejar el programa digite en consola cualquiera de los comandos en la categoría *Comandos de Consola*.
 # Consideraciones
